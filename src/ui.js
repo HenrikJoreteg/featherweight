@@ -9,9 +9,9 @@ export default ({worker, rootElement}) => {
   // the real DOM. We do this on a requestAnimationFrame
   // for minimal impact
   worker.onmessage = ({data}) => {
-    const { url, payload, pageTitle } = data
+    const { url, title, patches } = data
     window.requestAnimationFrame(() => {
-      applyPatch(rootElement, payload)
+      applyPatch(rootElement, patches)
     })
     // we only want to update the URL
     // if it's different than the current
@@ -22,9 +22,9 @@ export default ({worker, rootElement}) => {
       window.history.pushState(null, null, url)
     }
 
-    // if page.title
-    if (document.title !== pageTitle) {
-      document.title = pageTitle
+    // if page title
+    if (document.title !== title) {
+      document.title = title
     }
   }
 

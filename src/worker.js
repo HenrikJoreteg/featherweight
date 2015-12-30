@@ -8,8 +8,23 @@ export default ({redux, view, workerContext}) => {
 
   const render = () => {
     const state = redux.getState()
+    let title
+    let newVDom
+
     // our entire app in one line:
-    const newVDom = view(state)
+    const result = view(state)
+
+    // allow main app to optionally return
+    // {
+    //   vdom: {{ VIRTUAL DOM }},
+    //   title: {{ PAGE TITLE STRING }}
+    // }
+    if (result.hasOwnProperty('vdom')) {
+      title = result.title
+      newVDom = result.vdom
+    } else {
+      newVDom = result
+    }
 
     // do the diff
     const patches = diff(currentVDom, newVDom)
@@ -18,15 +33,20 @@ export default ({redux, view, workerContext}) => {
     // the new one the next time through
     currentVDom = newVDom
 
+    const message = {
+      url: state.url,
+      patches: serializePatch(patches)
+    }
+
+    if (title !== undefined) {
+      message.title = title
+    }
+
     // just for fun
     console.log('render count:', ++renderCount)
 
     // send patches and current url back to the main thread
-    workerContext.postMessage({
-      url: state.url,
-      title: state.title,
-      patches: serializePatch(patches)
-    })
+    workerContext.postMessage(message)
   }
 
   workerContext.onmessage = ({data}) => {
