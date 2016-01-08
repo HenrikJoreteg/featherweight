@@ -42,9 +42,6 @@ export default ({redux, view, workerContext}) => {
       message.title = title
     }
 
-    // just for fun
-    console.log('render count:', ++renderCount)
-
     // send patches and current url back to the main thread
     workerContext.postMessage(message)
   }

@@ -4,20 +4,25 @@
 
 ![](https://img.shields.io/npm/dm/featherweight.svg)![](https://img.shields.io/npm/v/featherweight.svg)![](https://img.shields.io/npm/l/featherweight.svg)
 
-The basic ideas of featherweight can be summarized as follows:
+**The basic idea of featherweight is that you as a developer only do this:**
 
-1. The UI of your app is a pure function of the current application state
-2. All state lives in [Redux](https://github.com/rackt/redux)
-3. 99% of your app code runs in a web worker
-4. No fancy router, the url is just another piece of state
-5. Pre-render as much HTML as possible before sending to the client
-6. JS "takes over" on the clientside as soon as it's loaded.
-7. All code necessary to do the above should be < 10kb min + gzipped
+1. Configure [redux](https://github.com/rackt/redux) however you want it (all your application state will live in Redux)
+2. Write a single, main, pure, synchronous view function that takes the state from redux (including the current URL of your app) and returns a virtual dom to represent what it should look like at that exact moment.
+
+*That's it!*
+
+**Featherweight then manages everything else**. It's a simple abstraction to manage communication between the worker thread (where Redux and your reducers will run) and the main thread:**
+
+1. 99% of your app code runs in a web worker
+2. No fancy router, the url is just another piece of state
+3. You can super easily pre-render as much HTML as possible before sending to the client either on the server or to static HTML files at build time.
+4. JS "takes over" on the clientside as soon as it's loaded.
+5. All code necessary to do the above should be < 10kb min + gzipped
 
 
 ## understanding the application pattern
 
-Unlike most apps featherweight is designed for running in a web worker. This means all the work of rendering, virtual dom generation, virtual dom diffing, and fetching data all happen in a Web Worker. 
+Featherweight lets you do all the heavy application work in a web worker. This means rendering new UI, virtual dom diffing, data fetching, etc. all happens in a Web Worker. 
 
 **This leaves the main thread free to focus entirely on efficient DOM updates and listening for user interractions.**
 
@@ -29,15 +34,15 @@ It consists of two primary components:
 
 ### Setting up the main thread
 
-This does practically nothing, featherweight's `ui` handles most of this for you. The only custom code you need here, may be to import whatever styles you want (if you're using webpack).
+Featherweight's `ui` handles most of the main thread for you. The only custom code you need here, may be to import whatever styles or 3rd party scripts. 
 
-Typically, it should look like this:
+Typically, it would just look like this:
 
 ```js
 // import the ui module
 import { ui } from 'featherweight'
 
-// import your worker code
+// import your worker code (with webpack-worker-loader this Just Works™)
 import WorkerThread from './worker.thread'
 
 // possibly import styles if you're using some sort of css/style loader with webpack
@@ -97,7 +102,7 @@ worker({
 
 ### Writing the UI components
 
-Feather components don't have state. **All state lives in Redux**, including the current URL of the app.
+The assumption is that components don't have state. **All state lives in Redux**, including the current URL of the app.
 
 This means the entire UI needs to be a single pure function that takes the application state object and return a new virtual dom.
 
