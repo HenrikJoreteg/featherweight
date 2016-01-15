@@ -1,9 +1,9 @@
-import routeMatcher from './routeMatcher'
+import createRouteMatcher from './createRouteMatcher'
 import ui from './ui'
 import worker from './worker'
 
 export {
-  routeMatcher,
+  createRouteMatcher,
   ui,
   worker
 }
