@@ -1,7 +1,7 @@
 {
   "name": "featherweight",
   "description": "featherweight application pattern",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": "Henrik Joreteg <henrik@joreteg.com> (https://joreteg.com)",
   "bugs": {
     "url": "https://github.com/HenrikJoreteg/featherweight/issues"
