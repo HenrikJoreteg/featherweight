@@ -34,12 +34,15 @@
   "scripts": {
     "build": "babel src --out-dir lib",
     "test": "node-babel test/",
-    "version": "npm run build"
+    "preversion": "npm run build"
   },
   "dependencies": {
     "local-links": "^1.4.0",
     "vdom-serialized-patch": "^1.0.2",
     "vdom-virtualize": "^1.0.1",
     "virtual-dom": "^2.1.1"
+  },
+  "standard": {
+    "ignore": "lib/*"
   }
 }

@@ -2,7 +2,7 @@
 
 **PLEASE NOTE:** This is all highly experimental, I've not built anything major with this and there are holes in functionality and unsolved problems related to events. Also, just because I'm open sourcing doesn't mean I'll maintain it for you or do anything else with it, ever. This is a pure experiment at this point. I'm simply sharing it in the spirit of open source in case anyone finds it interesting.
 
-![](https://img.shields.io/npm/dm/featherweight.svg)![](https://img.shields.io/npm/v/featherweight.svg)![](https://img.shields.io/npm/l/featherweight.svg)
+![](https://img.shields.io/npm/dm/featherweight.svg)![](https://img.shields.io/npm/v/featherweight.svg)![](https://img.shields.io/npm/l/featherweight.svg)[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
 **The basic idea of featherweight is that you as a developer only do this:**
 

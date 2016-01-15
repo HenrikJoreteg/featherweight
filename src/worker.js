@@ -4,7 +4,6 @@ import fromJson from 'vdom-as-json/fromJson'
 
 export default ({redux, view, workerContext}) => {
   let currentVDom
-  let renderCount = 0
 
   const render = () => {
     const state = redux.getState()
