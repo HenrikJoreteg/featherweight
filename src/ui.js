@@ -4,6 +4,12 @@ import applyPatch from 'vdom-serialized-patch/patch'
 import { getLocalPathname } from 'local-links'
 
 export default ({worker, rootElement}) => {
+  let firstChild = rootElement.firstChild
+
+  if (!firstChild) {
+    firstChild = document.createElement('div')
+    rootElement.appendChild(firstChild)
+  }
   // any time we get a message from the worker
   // it will be a set of "patches" to apply to
   // the real DOM. We do this on a requestAnimationFrame
@@ -11,11 +17,11 @@ export default ({worker, rootElement}) => {
   worker.onmessage = ({data}) => {
     const { url, title, patches } = data
     window.requestAnimationFrame(() => {
-      applyPatch(rootElement, patches)
+      applyPatch(rootElement.firstChild, patches)
     })
     // we only want to update the URL
     // if it's different than the current
-    // URL. Otherwise we keep pushing
+    // URL. Otherwise we'd keep pushing
     // the same url to the history with
     // each render
     if (window.location.pathname !== url) {
@@ -33,7 +39,8 @@ export default ({worker, rootElement}) => {
   // the current URL to our worker
   worker.postMessage({
     type: '@@feather/INIT',
-    vdom: toJson(virtualize(rootElement))
+    vdom: toJson(virtualize(firstChild)),
+    url: window.location.pathname
   })
 
   // if the user hits the back/forward buttons
@@ -70,5 +77,24 @@ export default ({worker, rootElement}) => {
       event.preventDefault()
       worker.postMessage(click)
     }
+  })
+
+  rootElement.addEventListener('submit', (event) => {
+    const { target } = event
+    const formAction = target['data-action']
+    if (!formAction) {
+      return
+    }
+
+    event.preventDefault()
+    const data = {}
+    const l = target.length
+    for (let i = 0; i < l; i++) {
+      const input = target[i]
+      if (input.name) {
+        data[input.name] = input.value
+      }
+    }
+    worker.postMessage({type: formAction, data})
   })
 }

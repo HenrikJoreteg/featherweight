@@ -1,8 +1,9 @@
 import diff from 'virtual-dom/diff'
 import serializePatch from 'vdom-serialized-patch/serialize'
 import fromJson from 'vdom-as-json/fromJson'
+import { FEATHER_INIT } from './index'
 
-export default ({redux, view, workerContext}) => {
+export default ({redux, view, workerContext, debug = false}) => {
   let currentVDom
 
   const render = () => {
@@ -46,7 +47,8 @@ export default ({redux, view, workerContext}) => {
   }
 
   workerContext.onmessage = ({data}) => {
-    if (data.type === '@@feather/INIT') {
+    if (debug) console.log('action:', data)
+    if (data.type === FEATHER_INIT) {
       currentVDom = fromJson(data.vdom)
     }
 
